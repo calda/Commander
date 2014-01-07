@@ -1,0 +1,8 @@
+name: ${project.artifactId}
+main: com.caldabeast.example.ExamplePlugin
+version: ${project.build.version}
+authors: [CalDaBeast]
+description: ${project.description}
+commands:
+  test:
+    description: A test command to show off CommandCommander
