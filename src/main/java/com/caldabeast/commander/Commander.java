@@ -3,6 +3,7 @@ package com.caldabeast.commander;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -21,7 +22,7 @@ public abstract class Commander implements CommandExecutor, TabCompleter {
 	public Commander() {
 		registerSubcommand(this);
 	}
-
+	
 	/**
 	 * Registers a subcommand to be called by the Commander
 	 *
@@ -71,12 +72,14 @@ public abstract class Commander implements CommandExecutor, TabCompleter {
 				throw new IllegalArgumentException("Must specify a subcommand for the Tab Completer to attach to.");
 			}
 			for (Entry<String, Subcommander> entry : subcommands.entrySet()) {
-				if (entry.getValue().getTabMethod() != null) {
-					throw new IllegalArgumentException("The subcommand " + entry.getValue().getName()
-							+ " already has an attached Tab Completer.");
+				if (anno.name().equalsIgnoreCase(entry.getValue().getName())) {
+					if (entry.getValue().getTabMethod() != null) {
+						throw new IllegalArgumentException("The subcommand " + entry
+								+ " already has an attached Tab Completer.");
+					}
+					entry.getValue().setTabMethod(method);
+					break;
 				}
-				entry.getValue().setTabMethod(method);
-				break;
 			}
 		}
 	}
@@ -251,6 +254,11 @@ public abstract class Commander implements CommandExecutor, TabCompleter {
 
 		void setTabMethod(Method method) {
 			this.tabMethod = method;
+		}
+		
+		@Override
+		public String toString(){
+			return "Subcommander[name=" + name + ",alias=" + Arrays.asList(alias) + "]";
 		}
 
 	}
